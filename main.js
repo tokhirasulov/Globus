@@ -2,6 +2,7 @@ import ThreeGlobe from 'three-globe';
 import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { request } from './src';
+import image from './assets/earth-dark.jpg';
 
     // Gen random paths
     const N_PATHS = 10;
@@ -24,7 +25,7 @@ import { request } from './src';
     });
 
     const Globe = new ThreeGlobe({ animateIn: false })
-      .globeImageUrl('/assets/earth-dark.jpg')
+      .globeImageUrl(image)
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       .pathsData(gData)
       .pathColor(() => ['rgba(0,0,255,0.8)', 'rgba(255,0,0,0.8)'])

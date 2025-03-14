@@ -1,5 +1,5 @@
 import { baseConfig } from "../config";
-
+import iso from "iso-3166-1";
 
 export const request = async (url) => {
 	const response = await fetch(url, {
@@ -10,3 +10,9 @@ export const request = async (url) => {
 	const data = await response.json();
 	return data;
 }
+
+export const getISO_A3 = (countryName) => {
+	const country = iso.whereAlpha2(countryName);
+	console.log(country, countryName);
+	return country ? country.alpha3 : "Unknown";
+  };

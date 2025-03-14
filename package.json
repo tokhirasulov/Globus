@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
+    "iso-3166-1": "^2.1.1",
     "three": "^0.174.0",
     "three-globe": "^2.42.2",
     "vite": "^6.2.2"

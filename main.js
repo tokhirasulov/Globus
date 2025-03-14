@@ -1,8 +1,11 @@
 import ThreeGlobe from 'three-globe';
 import * as THREE from 'three';
+import { PointLight } from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import { request } from './src';
+import { getISO_A3, request } from './src';
 import image from './assets/earth-dark.jpg';
+import countries from './src/globe-data-min.json'
+import iso from 'iso-3166-1'
 
     // Gen random paths
     const N_PATHS = 10;
@@ -26,12 +29,17 @@ import image from './assets/earth-dark.jpg';
 
     const Globe = new ThreeGlobe({ animateIn: false })
       .globeImageUrl(image)
+      .hexPolygonsData(countries.features)
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       .pathsData(gData)
       .pathColor(() => ['rgba(0,0,255,0.8)', 'rgba(255,0,0,0.8)'])
       .pathDashLength(0.01)
       .pathDashGap(0.004)
-      .pathDashAnimateTime(100000);
+      .pathDashAnimateTime(100000)
+      .hexPolygonColor((e) => {
+
+        return "rgba(255,255,255, 0.2)";
+      });
 
     setTimeout(() => {
       Globe
@@ -56,6 +64,9 @@ import image from './assets/earth-dark.jpg';
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
     camera.position.z = 500;
+    var dLight2 = new PointLight(0x8566cc, 0.5);
+    dLight2.position.set(-200, 500, 200);
+    camera.add(dLight2);
 
     // Add camera controls
     const tbControls = new TrackballControls(camera, renderer.domElement);
@@ -79,6 +90,15 @@ import image from './assets/earth-dark.jpg';
       // Get coordinates
       const fromCoords = fromCityCoordinates.map((city) => [city.latitude, city.longitude])[0];
       const toCoords = toCityCoordinates.map((city) => [city.latitude, city.longitude])[0];
+      const countries = []
+      fromCityCoordinates.forEach((city) => {
+        countries.push(getISO_A3(city.country));
+      });
+      toCityCoordinates.forEach((city) => {
+        countries.push(getISO_A3(city.country));
+      })
+      console.log(countries);
+
 
       // Clear previous paths
       Globe.pathsData([]);
@@ -94,11 +114,22 @@ import image from './assets/earth-dark.jpg';
 
       Globe
         .pathsData(pathData)
-        .pathColor(() => ['rgba(0,255,0,0.8)', 'rgba(255,255,0,0.8)']) // Gradient from green to yellow
+        .pathColor(() => ['rgb(255, 255, 255)', 'rgb(255, 255, 255)']) // Gradient from green to yellow
         .pathDashLength(0.01)
         .pathDashGap(0.004)
         .pathDashAnimateTime(4000)
-        .pathPointAlt(() => 0.2);
+        .pathPointAlt(() => 0.2)
+        .hexPolygonColor((e) => {
+
+        if (
+          countries.includes(
+            e.properties.ISO_A3
+          )
+        ) {
+          return "rgba(255,255,255, 1)";
+        }
+        return "rgba(255,255,255, 0.2)";
+      });
 
         // Show distance in the middle
         const midLat = (fromCoords[0] + toCoords[0]) / 2;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Globus</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="globeViz"></div>
+    <div
+      id="labels-container"
+      style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      "
+    ></div>
+    <div class="destwrapp">
+      <input id="fromCity" type="text" placeholder="From city" />
+      <input id="toCity" type="text" placeholder="To city" />
+      <button onclick="drawPath()">Draw Path</button>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

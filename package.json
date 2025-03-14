@@ -1,0 +1,18 @@
+{
+  "name": "globus",
+  "version": "1.0.0",
+  "description": "Github globe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "vite"
+  },
+  "author": "Tokhir Rasulov",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "three": "^0.174.0",
+    "three-globe": "^2.42.2",
+    "vite": "^6.2.2"
+  }
+}

@@ -1,0 +1,37 @@
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+  }
+  canvas {
+	display: block;
+  }
+
+.destwrapp{
+	width: 100%;
+	position: absolute;
+	bottom: 20px;
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	z-index: 10;
+}
+
+input {
+	color: #000;
+	height: 30px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+button{
+	background-color: #1e2074;
+	color: rgb(255, 255, 255);
+	padding: 8px 20px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 16px;
+	outline: none;
+}

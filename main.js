@@ -1,11 +1,12 @@
 import ThreeGlobe from 'three-globe';
 import * as THREE from 'three';
-import { PointLight } from 'three';
+import { PointLight, Color } from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import { getISO_A3, request } from './src';
+import { getISO_A3, labels, request } from './src';
 import image from './assets/earth-dark.jpg';
 import countries from './src/globe-data-min.json'
-import iso from 'iso-3166-1'
+import { formatData } from './src';
+
 
     // Gen random paths
     const N_PATHS = 10;
@@ -80,7 +81,9 @@ import iso from 'iso-3166-1'
       const fromCityCoordinates = await request(`https://api.api-ninjas.com/v1/city?name=${fromCity}`)
       const toCityCoordinates = await request(`https://api.api-ninjas.com/v1/city?name=${toCity}`);
 
-      console.log(fromCityCoordinates.length, toCityCoordinates.length);
+      const arcs = formatData(fromCityCoordinates, toCityCoordinates);
+      const labelsArr= fromCityCoordinates.concat(toCityCoordinates).map((city) => labels(city));
+      console.log(labelsArr)
 
       if (fromCityCoordinates.length <= 0 || toCityCoordinates.length <= 0) {
         alert('Invalid city names. Please try again.');
@@ -97,14 +100,12 @@ import iso from 'iso-3166-1'
       toCityCoordinates.forEach((city) => {
         countries.push(getISO_A3(city.country));
       })
-      console.log(countries);
 
 
-      // Clear previous paths
+
       Globe.pathsData([]);
       document.getElementById("labels-container").innerHTML = "";
 
-      // Create new path data
       const pathData = [
         [
         [fromCoords[0], fromCoords[1], 0],
@@ -113,12 +114,6 @@ import iso from 'iso-3166-1'
       ];
 
       Globe
-        .pathsData(pathData)
-        .pathColor(() => ['rgb(255, 255, 255)', 'rgb(255, 255, 255)']) // Gradient from green to yellow
-        .pathDashLength(0.01)
-        .pathDashGap(0.004)
-        .pathDashAnimateTime(4000)
-        .pathPointAlt(() => 0.2)
         .hexPolygonColor((e) => {
 
         if (
@@ -126,10 +121,27 @@ import iso from 'iso-3166-1'
             e.properties.ISO_A3
           )
         ) {
-          return "rgba(255,255,255, 1)";
+          return "rgba(255,255,255, 0.5)";
         }
         return "rgba(255,255,255, 0.2)";
-      });
+      })
+      .arcsData(arcs).arcColor((e) => e.status !== undefined ? (e.status ? "rgb(0,0,255)" : "#FF4000") : "#FFFFFF")
+      .arcStroke(0.5).labelDotRadius(10)
+      .labelsData(labelsArr)
+      .labelText((e) => e.city)
+      .labelColor(() => "rgb(238, 255, 0)")
+      .labelDotOrientation(() => {
+        return "top";
+      })
+      .labelDotRadius(0.3)
+      .labelSize(0.8)
+      .labelResolution(6)
+      .labelAltitude(0.01)
+      .pointsData(labelsArr)
+      .pointColor(() => "rgb(255,0,0)")
+      .pointsMerge(true)
+      .pointAltitude(0.07)
+      .pointRadius(0.1);
 
         // Show distance in the middle
         const midLat = (fromCoords[0] + toCoords[0]) / 2;
@@ -202,6 +214,23 @@ import iso from 'iso-3166-1'
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c; // Distance in km
     }
+
+
+
+
+  function onMouseMove(event) {
+    mouseX = event.clientX - windowHalfX;
+    mouseY = event.clientY - windowHalfY;
+    // console.log("x: " + mouseX + " y: " + mouseY);
+  };
+
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    windowHalfX = window.innerWidth / 1.5;
+    windowHalfY = window.innerHeight / 1.5;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 
 
     // Kick-off renderer

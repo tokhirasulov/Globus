@@ -1,6 +1,6 @@
 # 🌍 Globus - Interactive 3D Globe
 
-Globus is an interactive 3D globe visualization built using **Three.js** and **three-globe**. This project allows users to explore global connections and display dynamic paths between different locations with animated arcs.
+Globus is an interactive 3D globe visualization built using **Three.js** and **three-globe**. This project allows users to explore and display dynamic paths between different locations with animated arcs.
 
 ## 🚀 Demo
 
